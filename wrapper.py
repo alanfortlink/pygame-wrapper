@@ -87,9 +87,10 @@ class Game:
     Abstraction over a pygame game
     """
 
-    def __init__(self, handle_event, update, draw, width, height):
+    def __init__(self, init, handle_event, update, draw, width, height):
         # pylint: disable=too-many-arguments
         self.update = update
+        self.init = init
         self.handle_event = handle_event
         self.draw = draw
         self.screen = pygame.display.set_mode([width, height])
@@ -121,6 +122,7 @@ class Game:
         Starts the game loop
         """
 
+        self.init(self)
         # Set 60 frames per second
         clock = pygame.time.Clock()
 

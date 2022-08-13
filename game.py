@@ -25,11 +25,6 @@ def handle_event(g: Game, ev):
         init(g)
 
 def init(g: Game):
-    global is_first_time
-    if not is_first_time:
-        return
-    is_first_time = False
-
     g.score = 0
     g.game_over = False
 
@@ -49,8 +44,6 @@ def init(g: Game):
     g.mr = False
 
 def update(g: Game, dt: float):
-    init(g)
-
     if g.game_over:
         return
 
