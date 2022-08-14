@@ -3,7 +3,7 @@ Main file for the game
 """
 
 from wrapper import Game
-from game import init, handle_event, update, draw, WIDTH, HEIGHT
+from initial import init, handle_event, update, draw, WIDTH, HEIGHT
 
 def main():
     """

@@ -1,104 +1,72 @@
-from wrapper import Game, Colors
+from typing_extensions import Self
+from wrapper import GameObject, Colors
 import pygame
-from random import randint, choice
-from math import sqrt
+from random import randint
 
 WIDTH = 1200
 HEIGHT = 800
 
-is_first_time = True
+class Vector:
+    def __init__(self, x: float, y: float):
+        self.x = x
+        self.y = y
 
-def handle_event(g: Game, ev):
-    if ev.type == pygame.KEYDOWN and ev.key == pygame.K_LEFT:
-        g.ml = True
-    if ev.type == pygame.KEYDOWN and ev.key == pygame.K_RIGHT:
-        g.mr = True
+    def __add__(self, other: Self) -> Self:
+        return Vector(self.x + other.x, self.y + other.y)
 
-    if ev.type == pygame.KEYUP and ev.key == pygame.K_LEFT:
-        g.ml = False
-    if ev.type == pygame.KEYUP and ev.key == pygame.K_RIGHT:
-        g.mr = False
+    def __sub__(self, other: Self) -> Self:
+        return Vector(self.x - other.x, self.y - other.y)
 
-    if ev.type == pygame.KEYDOWN and ev.key == pygame.K_RETURN:
-        global is_first_time
-        is_first_time = True
-        init(g)
+    def mul(self, scalar: float) -> Self: return Vector(self.x * scalar, self.y * scalar)
 
-def init(g: Game):
-    g.score = 0
-    g.game_over = False
+class Element:
+    def __init__(self, position: Vector, width: int, height: int, speed: Vector, color: tuple[int, int, int]):
+        self.position = position
+        self.speed = speed
+        self.width = width
+        self.height = height
+        self.color = color
 
-    g.r = 50
-    g.x = randint(g.r / 2, WIDTH - g.r / 2)
-    g.y = 100
+    def update(self, g: GameObject, dt: float):
+        self.position = self.position + self.speed.mul(dt)
 
-    g.vx = choice([-1, 1]) * (4 + randint(0, 7))
-    g.vy = choice([-1, 1]) * (4 + randint(0, 7))
+    def lock(self, p1x: float, p1y: float, p2x: float, p2y: float) -> None:
+        self.position.x = min(p2x, max(p1x, self.position.x))
+        self.position.y = min(p2y, max(p1y, self.position.y))
 
-    g.wp = 150
-    g.hp = 50
-    g.px = WIDTH / 2
+    def bounce(self, p1x: float, p1y: float, p2x: float, p2y: float) -> None:
+        if self.position.x <= p1x or self.position.x >= p2x:
+            self.speed.x = -self.speed.x
+        if self.position.y <= p1y or self.position.y >= p2y:
+            self.speed.y = -self.speed.y
 
-    g.vp = 15
-    g.ml = False
-    g.mr = False
+player_speed = 1000
+key_pressed = {}
 
-def update(g: Game, dt: float):
-    if g.game_over:
-        return
+player = Element(Vector(100, 100), 50, 50, Vector(0, 0), Colors.RED)
+enemy = Element(Vector(WIDTH - 100, HEIGHT - 100), 50, 50, Vector(randint(80, 120), randint(80, 120)), Colors.BLUE)
 
-    # Collision
-    if g.y + g.r >= HEIGHT - g.hp:
-        r2 = g.hp
-        left_collides = g.px - g.wp / 2 <= (g.x - g.r) <= g.px + g.wp / 2
-        right_collides = g.px - g.wp / 2 <= (g.x + g.r) <= g.px + g.wp / 2
-        d1 = sqrt((g.x - g.px - g.wp / 2 + r2) ** 2 + (g.y - HEIGHT - g.hp / 2) ** 2)
-        d2 = sqrt((g.x - g.px + g.wp / 2 - r2) ** 2 + (g.y - HEIGHT - g.hp / 2) ** 2)
-        collides_circle = (d1 <= r2 + g.r) or (d2 <= r2 + g.r)
-        
-        if left_collides or right_collides or collides_circle:
-            g.vy = -g.vy
+def handle_event(g: GameObject, event: pygame.event.Event):
+    if event.type == pygame.KEYDOWN:
+        key_pressed[event.key] = True
+    if event.type == pygame.KEYUP:
+        key_pressed[event.key] = False
 
-            inc = 1.1
+def init(_: GameObject):
+    for key in [pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
+        key_pressed[key] = False
 
-            g.vx *= inc
-            g.vy *= inc
-            g.score += 1
-        else:
-            g.game_over = True
+def update(g: GameObject, dt: float):
+    player.speed = Vector(key_pressed[pygame.K_LEFT] * -player_speed + key_pressed[pygame.K_RIGHT] * player_speed,
+                        key_pressed[pygame.K_UP] * -player_speed + key_pressed[pygame.K_DOWN] * player_speed)
 
-    if not (g.ml and g.mr):
-        if g.ml:
-            g.px -= g.vp
-        if g.mr:
-            g.px += g.vp
+    player.update(g, dt)
+    player.lock(player.width / 2, player.height / 2, WIDTH - player.width / 2, HEIGHT - player.height / 2)
 
-    if g.x - g.r <= 0 or g.x + g.r >= WIDTH:
-        g.vx = -g.vx
-    
-    if g.y - g.r <= 0:
-        g.vy = -g.vy
+    enemy.update(g, dt)
+    enemy.bounce(enemy.width / 2, enemy.height / 2, WIDTH - enemy.width / 2, HEIGHT - enemy.height / 2)
 
-    if g.y + g.r >= HEIGHT:
-        g.game_over = True
-
-    min_x = g.wp / 2
-    max_x = WIDTH - g.wp / 2
-    
-    g.px = min(max(min_x, g.px), max_x)
-
-    g.vy += 20
-
-    g.vx += 10.0
-
-    g.x += g.vx * dt
-    g.y += g.vy * dt
-
-
-def draw(g: Game):
-    font_size = 120
+def draw(g: GameObject):
     g.draw_background(Colors.BLACK)
-    g.draw_text(str(g.score), WIDTH / 2, font_size / 2, font_size, Colors.WHITE)
-    if not g.game_over:
-        g.draw_circle(g.x, g.y, g.r, Colors.RED)
-        g.draw_rect(g.px, HEIGHT - g.hp / 2, g.wp, g.hp, Colors.BLUE)
+    g.draw_rect(player.position.x, player.position.y, player.width, player.height, player.color)
+    g.draw_rect(enemy.position.x, enemy.position.y, enemy.width, enemy.height, enemy.color)
