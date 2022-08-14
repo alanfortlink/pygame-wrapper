@@ -98,7 +98,8 @@ class Game:
     def draw_text(self, text, x, y, size, color):
         font = pygame.font.SysFont(None, size)
         text_surface = font.render(text, False, color)
-        self.screen.blit(text_surface, (x, y))
+        szx, szy = font.size(text)
+        self.screen.blit(text_surface, (x - szx / 2, y - szy / 2))
 
     def draw_rect(self, x, y, width, height, color):
         # pylint: disable=too-many-arguments,invalid-name
