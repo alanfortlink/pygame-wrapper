@@ -80,6 +80,21 @@ ALL_COLORS: list[tuple[int, int, int]] = [
     Colors.PINK_CYAN
 ]
 
+VIVID_COLORS: list[tuple[int, int, int]] = [
+    Colors.RED,
+    Colors.GREEN,
+    Colors.BLUE,
+    Colors.WHITE,
+    Colors.MAGENTA,
+    Colors.YELLOW,
+    Colors.CYAN,
+    Colors.ORANGE,
+    Colors.GREEN_YELLOW,
+    Colors.RED_YELLOW,
+    Colors.RED_GREEN,
+    Colors.PINK,
+]
+
 # Set up the drawing window
 pygame.init()
 pygame.font.init()
@@ -107,6 +122,13 @@ class GameObject:
         Draws a circle
         """
         pygame.draw.circle(self.screen, color, (x, y), radius)
+
+    def draw_line(self, x1: float, y1: float, x2: float, y2: float, color: tuple[int, int, int], width: int):
+        # pylint: disable=too-many-arguments,invalid-name
+        """
+        Draws a line from (x1, y1) -> (x2, y2)
+        """
+        pygame.draw.line(self.screen, color, (x1, y1), (x2, y2), width)
 
     def draw_background(self, color: tuple[int, int,  int]):
         self.screen.fill(color)
