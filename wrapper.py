@@ -5,44 +5,46 @@ Wrapper over pygame
 import pygame
 from collections.abc import Callable
 
+
 class Colors:
     """
     Color class
     """
     # pylint: disable=too-few-public-methods
     RED: tuple[int, int, int] = (255, 0, 0)
-    GREEN : tuple[int, int, int] = (0, 255, 0)
-    BLUE : tuple[int, int, int] = (0, 0, 255)
-    WHITE : tuple[int, int, int] = (255, 255, 255)
-    BLACK : tuple[int, int, int] = (0, 0, 0)
-    MAGENTA : tuple[int, int, int] = (255, 0, 255)
-    YELLOW : tuple[int, int, int] = (255, 255, 0)
-    CYAN : tuple[int, int, int] = (0, 255, 255)
-    ORANGE : tuple[int, int, int] = (255, 165, 0)
-    BROWN : tuple[int, int, int] = (165, 42, 42)
-    GRAY : tuple[int, int, int] = (128, 128, 128)
-    DARK_GRAY : tuple[int, int, int] = (64, 64, 64)
-    LIGHT_GRAY : tuple[int, int, int] = (192, 192, 192)
-    DARK_BLUE : tuple[int, int, int] = (0, 0, 128)
-    DARK_GREEN : tuple[int, int, int] = (0, 128, 0)
-    DARK_CYAN : tuple[int, int, int] = (0, 128, 128)
-    DARK_RED : tuple[int, int, int] = (128, 0, 0)
-    DARK_MAGENTA : tuple[int, int, int] = (128, 0, 128)
-    DARK_YELLOW : tuple[int, int, int] = (128, 128, 0)
-    DARK_ORANGE : tuple[int, int, int] = (128, 128, 0)
-    DARK_BROWN : tuple[int, int, int] = (128, 64, 64)
-    GREEN_YELLOW : tuple[int, int, int] = (128, 255, 0)
-    BLUE_YELLOW : tuple[int, int, int] = (0, 255, 128)
-    BLUE_GREEN : tuple[int, int, int] = (0, 128, 128)
-    RED_YELLOW : tuple[int, int, int] = (255, 128, 0)
-    RED_GREEN : tuple[int, int, int] = (128, 128, 0)
-    PINK : tuple[int, int, int] = (255, 192, 203)
-    PINK_YELLOW : tuple[int, int, int] = (255, 228, 225)
-    PINK_GREEN : tuple[int, int, int] = (0, 255, 255)
-    PINK_BLUE : tuple[int, int, int] = (0, 0, 255)
-    PINK_RED : tuple[int, int, int] = (255, 0, 255)
-    PINK_MAGENTA : tuple[int, int, int] = (255, 0, 255)
-    PINK_CYAN : tuple[int, int, int] = (0, 255, 255)
+    GREEN: tuple[int, int, int] = (0, 255, 0)
+    BLUE: tuple[int, int, int] = (0, 0, 255)
+    WHITE: tuple[int, int, int] = (255, 255, 255)
+    BLACK: tuple[int, int, int] = (0, 0, 0)
+    MAGENTA: tuple[int, int, int] = (255, 0, 255)
+    YELLOW: tuple[int, int, int] = (255, 255, 0)
+    CYAN: tuple[int, int, int] = (0, 255, 255)
+    ORANGE: tuple[int, int, int] = (255, 165, 0)
+    BROWN: tuple[int, int, int] = (165, 42, 42)
+    GRAY: tuple[int, int, int] = (128, 128, 128)
+    DARK_GRAY: tuple[int, int, int] = (64, 64, 64)
+    LIGHT_GRAY: tuple[int, int, int] = (192, 192, 192)
+    DARK_BLUE: tuple[int, int, int] = (0, 0, 128)
+    DARK_GREEN: tuple[int, int, int] = (0, 128, 0)
+    DARK_CYAN: tuple[int, int, int] = (0, 128, 128)
+    DARK_RED: tuple[int, int, int] = (128, 0, 0)
+    DARK_MAGENTA: tuple[int, int, int] = (128, 0, 128)
+    DARK_YELLOW: tuple[int, int, int] = (128, 128, 0)
+    DARK_ORANGE: tuple[int, int, int] = (128, 128, 0)
+    DARK_BROWN: tuple[int, int, int] = (128, 64, 64)
+    GREEN_YELLOW: tuple[int, int, int] = (128, 255, 0)
+    BLUE_YELLOW: tuple[int, int, int] = (0, 255, 128)
+    BLUE_GREEN: tuple[int, int, int] = (0, 128, 128)
+    RED_YELLOW: tuple[int, int, int] = (255, 128, 0)
+    RED_GREEN: tuple[int, int, int] = (128, 128, 0)
+    PINK: tuple[int, int, int] = (255, 192, 203)
+    PINK_YELLOW: tuple[int, int, int] = (255, 228, 225)
+    PINK_GREEN: tuple[int, int, int] = (0, 255, 255)
+    PINK_BLUE: tuple[int, int, int] = (0, 0, 255)
+    PINK_RED: tuple[int, int, int] = (255, 0, 255)
+    PINK_MAGENTA: tuple[int, int, int] = (255, 0, 255)
+    PINK_CYAN: tuple[int, int, int] = (0, 255, 255)
+
 
 ALL_COLORS: list[tuple[int, int, int]] = [
     Colors.RED,
@@ -99,6 +101,7 @@ VIVID_COLORS: list[tuple[int, int, int]] = [
 pygame.init()
 pygame.font.init()
 
+
 class GameObject:
     def __init__(self, screen):
         self.screen = screen
@@ -114,7 +117,8 @@ class GameObject:
         """
         Draws a rectangle
         """
-        pygame.draw.rect(self.screen, color, (int(x) - width // 2, int(y) - height // 2, width, height))
+        pygame.draw.rect(self.screen, color, (int(x) - width //
+                         2, int(y) - height // 2, width, height))
 
     def draw_circle(self, x: float, y: float, radius: int, color: tuple[int, int, int]):
         # pylint: disable=too-many-arguments,invalid-name
